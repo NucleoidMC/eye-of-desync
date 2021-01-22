@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "eye-of-desync",
+  "version": "${version}",
+  "name": "Eye of Desync",
+  "description": "Watches for and reports inventory desync",
+  "authors": ["Nucleoid Contributors"],
+  "license": "LGPLv3",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["xyz.nucleoid.desync.DesyncInitializer"]
+  },
+  "mixins": ["desync.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.9.1",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}
