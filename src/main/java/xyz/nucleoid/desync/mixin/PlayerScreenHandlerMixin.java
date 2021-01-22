@@ -57,6 +57,7 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler {
                 inventoryTracker.resetTrackedState();
 
                 LOGGER.error("Detected inventory desync for {}", this.owner.getEntityName(), new Exception());
+                inventoryTracker.printPacketHistory();
             }
         }
     }
