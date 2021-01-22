@@ -2,12 +2,12 @@ package xyz.nucleoid.desync;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.ConfirmScreenActionS2CPacket;
-import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
-import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
+import xyz.nucleoid.desync.mixin.ConfirmScreenActionS2CPacketAccessor;
+import xyz.nucleoid.desync.mixin.InventoryS2CPacketAccessor;
+import xyz.nucleoid.desync.mixin.ScreenHandlerSlotUpdateS2CPacketAccessor;
 
 public final class ClientInventoryTracker {
     private final ServerPlayerEntity player;
@@ -28,14 +28,15 @@ public final class ClientInventoryTracker {
         this.screenHandler.updateSlotStacks(this.player.playerScreenHandler.getStacks());
     }
 
-    public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet) {
-        ItemStack stack = packet.getItemStack();
-        int slot = packet.getSlot();
-        if (packet.getSyncId() == -1) {
+    public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacketAccessor packet) {
+        ItemStack stack = packet.desync$getStack();
+        int slot = packet.desync$getSlot();
+        int syncId = packet.desync$getSyncId();
+        if (syncId == -1) {
             this.inventory.setCursorStack(stack);
-        } else if (packet.getSyncId() == -2) {
+        } else if (syncId == -2) {
             this.inventory.setStack(slot, stack);
-        } else if (packet.getSyncId() == this.screenHandler.syncId) {
+        } else if (syncId == this.screenHandler.syncId) {
             if (!stack.isEmpty() && slot >= 36 && slot < 45) {
                 ItemStack existingStack = this.screenHandler.getSlot(slot).getStack();
                 if (existingStack.isEmpty() || existingStack.getCount() < stack.getCount()) {
@@ -47,14 +48,14 @@ public final class ClientInventoryTracker {
         }
     }
 
-    public void onInventoryUpdate(InventoryS2CPacket packet) {
-        if (packet.getSyncId() == this.screenHandler.syncId) {
-            this.screenHandler.updateSlotStacks(packet.getContents());
+    public void onInventoryUpdate(InventoryS2CPacketAccessor packet) {
+        if (packet.desync$getSyncId() == this.screenHandler.syncId) {
+            this.screenHandler.updateSlotStacks(packet.desync$getContents());
         }
     }
 
-    public void onConfirmScreenAction(ConfirmScreenActionS2CPacket packet) {
-        if (packet.wasAccepted()) {
+    public void onConfirmScreenAction(ConfirmScreenActionS2CPacketAccessor packet) {
+        if (packet.desync$wasAccepted()) {
             this.resetTrackedState();
         }
     }

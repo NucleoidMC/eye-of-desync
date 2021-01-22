@@ -3,7 +3,13 @@
   "minVersion": "0.8",
   "package": "xyz.nucleoid.desync.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": ["PlayerScreenHandlerMixin", "ServerPlayNetworkHandlerMixin"],
+  "mixins": [
+    "ConfirmScreenActionS2CPacketAccessor",
+    "InventoryS2CPacketAccessor",
+    "PlayerScreenHandlerMixin",
+    "ScreenHandlerSlotUpdateS2CPacketAccessor",
+    "ServerPlayNetworkHandlerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

@@ -40,11 +40,11 @@ public class ServerPlayNetworkHandlerMixin implements InventoryTrackerHolder {
     @Inject(method = "sendPacket(Lnet/minecraft/network/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V", at = @At("HEAD"))
     private void sendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> listener, CallbackInfo ci) {
         if (packet instanceof ScreenHandlerSlotUpdateS2CPacket) {
-            this.inventoryTracker.onScreenHandlerSlotUpdate((ScreenHandlerSlotUpdateS2CPacket) packet);
+            this.inventoryTracker.onScreenHandlerSlotUpdate((ScreenHandlerSlotUpdateS2CPacketAccessor) packet);
         } else if (packet instanceof InventoryS2CPacket) {
-            this.inventoryTracker.onInventoryUpdate((InventoryS2CPacket) packet);
+            this.inventoryTracker.onInventoryUpdate((InventoryS2CPacketAccessor) packet);
         } else if (packet instanceof ConfirmScreenActionS2CPacket) {
-            this.inventoryTracker.onConfirmScreenAction((ConfirmScreenActionS2CPacket) packet);
+            this.inventoryTracker.onConfirmScreenAction((ConfirmScreenActionS2CPacketAccessor) packet);
         }
     }
 
