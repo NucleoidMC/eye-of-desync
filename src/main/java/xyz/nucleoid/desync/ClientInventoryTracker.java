@@ -3,11 +3,14 @@ package xyz.nucleoid.desync;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
 import xyz.nucleoid.desync.mixin.ConfirmScreenActionS2CPacketAccessor;
 import xyz.nucleoid.desync.mixin.InventoryS2CPacketAccessor;
 import xyz.nucleoid.desync.mixin.ScreenHandlerSlotUpdateS2CPacketAccessor;
+
+import java.util.List;
 
 public final class ClientInventoryTracker {
     private final ServerPlayerEntity player;
@@ -24,8 +27,15 @@ public final class ClientInventoryTracker {
         return new ClientInventoryTracker(player);
     }
 
+    private void updateSlotStacks(List<ItemStack> stacks) {
+        for(int i = 0; i < stacks.size(); i++) {
+            Slot slot = this.screenHandler.getSlot(i);
+            slot.setStack(stacks.get(i));
+        }
+    }
+
     public void resetTrackedState() {
-        this.screenHandler.updateSlotStacks(this.player.playerScreenHandler.getStacks());
+        this.updateSlotStacks(this.player.playerScreenHandler.getStacks());
     }
 
     public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacketAccessor packet) {
@@ -50,7 +60,7 @@ public final class ClientInventoryTracker {
 
     public void onInventoryUpdate(InventoryS2CPacketAccessor packet) {
         if (packet.desync$getSyncId() == this.screenHandler.syncId) {
-            this.screenHandler.updateSlotStacks(packet.desync$getContents());
+            this.updateSlotStacks(packet.desync$getContents());
         }
     }
 
