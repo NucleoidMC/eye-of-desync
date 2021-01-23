@@ -51,7 +51,9 @@ public abstract class PlayerScreenHandlerMixin extends ScreenHandler {
 
                 MutableText message = new LiteralText("Oh no! It looks like your inventory has become desynchronized.")
                         .formatted(Formatting.RED)
-                        .append(link);
+                        .append(link)
+                        .append(new LiteralText("\nSome debugging information has been sent to the console. Let an admin know!").formatted(Formatting.GRAY, Formatting.ITALIC))
+                        .append(new LiteralText("\nBut if this message is wrong, you can ignore it.").formatted(Formatting.GRAY, Formatting.ITALIC));
 
                 this.owner.sendMessage(message, false);
                 inventoryTracker.resetTrackedState();

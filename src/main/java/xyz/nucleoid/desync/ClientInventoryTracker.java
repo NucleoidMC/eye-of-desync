@@ -111,7 +111,7 @@ public final class ClientInventoryTracker {
             System.out.println("INVENTORY: " + accessor.desync$getSyncId() + ": " + accessor.desync$getContents());
         } else if (packet instanceof ScreenHandlerSlotUpdateS2CPacket) {
             ScreenHandlerSlotUpdateS2CPacketAccessor accessor = (ScreenHandlerSlotUpdateS2CPacketAccessor) packet;
-            System.out.println("SLOT UPDATE: " + accessor.desync$getSyncId() + " in " + accessor.desync$getSlot() + ": " + accessor.desync$getSlot());
+            System.out.println("SLOT UPDATE: " + accessor.desync$getSyncId() + " in " + accessor.desync$getSlot() + ": " + accessor.desync$getStack());
         }
     }
 }
